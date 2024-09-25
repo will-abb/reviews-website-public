@@ -1,0 +1,29 @@
+- name: Install OpenLiteSpeed web server
+  hosts: all
+  become: yes
+  vars:
+    server_name: your_domain_or_IP
+  tasks:
+    - name: Install prerequisite packages
+      apt:
+        name: ["lsb-release", "wget", "curl"]
+        state: present
+        update_cache: yes
+    - name: Add OpenLiteSpeed Repository
+      shell: |
+        wget -O - https://rpms.litespeedtech.com/debian/enable_lst_debain_repo.sh | bash
+    - name: Install OpenLiteSpeed and PHP
+      apt:
+        name: ["openlitespeed", "lsphp82"]
+        state: present
+        update_cache: yes
+    - name: Ensure OpenLiteSpeed is running
+      service:
+        name: lsws
+        state: started
+        enabled: yes
+  handlers:
+    - name: Restart OpenLiteSpeed
+      service:
+        name: lsws
+        state: restarted

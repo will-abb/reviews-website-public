@@ -1,0 +1,69 @@
+- name: Configure UFW firewall on Ubuntu server
+  hosts: all
+  gather_facts: yes
+  become: yes
+  vars:
+    ssh_port: 62222
+    ssm_port: 22
+    http_port: 80
+    https_port: 443
+    dns_port: 53
+    allowed_ips: ["0.0.0.0/0"] # replace with your cidr or specific ips
+  tasks:
+    - name: install ufw
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+    - name: allow incoming traffic on ssh port
+      ansible.builtin.ufw:
+        rule: allow
+        port: "{{ ssh_port }}"
+        proto: tcp
+        src: "{{ item }}"
+        comment: "Needed for SSH in"
+      loop: "{{ allowed_ips }}"
+    - name: Allow port 22 for SSM
+      ansible.builtin.ufw:
+        rule: allow
+        port: "{{ ssm_port }}"
+        proto: tcp
+        src: "{{ item }}"
+        comment: "Temporary for SSM until the actual IPs are figured out"
+      loop: "{{ allowed_ips }}"
+    - name: Allow incoming and outgoing traffic on HTTP port
+      ansible.builtin.ufw:
+        rule: allow
+        port: "{{ http_port }}"
+        proto: tcp
+        comment: "Allow HTTP in/out"
+        src: "{{ item }}"
+      loop: "{{ allowed_ips }}"
+    - name: Allow incoming and outgoing traffic on HTTPS port
+      ansible.builtin.ufw:
+        rule: allow
+        port: "{{ https_port }}"
+        proto: tcp
+        comment: "Allow HTTPS in/out"
+        src: "{{ item }}"
+      loop: "{{ allowed_ips }}"
+    - name: Allow outgoing traffic on DNS port
+      ansible.builtin.ufw:
+        rule: allow
+        direction: out
+        port: "{{ dns_port }}"
+        proto: udp
+        comment: "DNS"
+    - name: Set default incoming policy to deny
+      ansible.builtin.ufw:
+        direction: incoming
+        policy: deny
+    - name: Set default outgoing policy to deny
+      ansible.builtin.ufw:
+        direction: outgoing
+        policy: deny
+    - name: Enable UFW
+      ansible.builtin.ufw:
+        state: enabled
+    - name: Enable logging
+      ansible.builtin.ufw:
+        logging: on

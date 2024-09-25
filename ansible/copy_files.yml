@@ -1,0 +1,26 @@
+- name: Copy files
+  hosts: all
+  become: yes
+  vars:
+    file_destination: /var/www/html
+    file_source: ../site_code/final_code
+  tasks:
+    - name: Copy files to the server
+      synchronize:
+        src: "{{ file_source }}/"
+        dest: "{{ file_destination }}"
+        recursive: yes
+        mode: push
+    - name: Change owner of web files
+      become: true
+      file:
+        path: "{{ file_destination }}"
+        owner: ubuntu
+        group: www-data
+        recurse: yes
+    - name: Change file permissions
+      become: true
+      file:
+        path: "{{ file_destination }}"
+        mode: "0644"
+        recurse: yes

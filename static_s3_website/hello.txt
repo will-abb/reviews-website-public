@@ -1,0 +1,24 @@
+variable "aws_region" {
+  description = "The AWS region in which all resources will be created"
+  default     = "us-east-1"
+}
+
+variable "bucket_name" {
+  description = "The name of the S3 bucket to be created"
+  default     = "trendingtechdevices.com"
+}
+
+variable "index_path" {
+  description = "The local file path to your index.html file"
+  default     = "~/Repos/personal/reviews-website/site_code/final_code/index.html"
+}
+
+variable "hosted_zone_id" {
+  description = "The ID of the hosted zone in Route53 where the DNS record will be created"
+  default     = "Z071426418GLVEH321Y7I"
+}
+
+variable "record_name" {
+  description = "The name of the DNS record to create in Route53"
+  default     = "www"
+}

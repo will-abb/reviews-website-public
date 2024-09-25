@@ -1,0 +1,19 @@
+image: python:3.10-bullseye
+pipelines:
+  default:
+    - step:
+        name: Install dependencies
+        caches:
+          - pip # use pip cache to speed up installation
+        script:
+          - apt-get update # update package lists
+          - apt-get install -y rsync # install rsync
+          - python -m venv venv # create a virtual environment
+          - source venv/bin/activate # activate the virtual environment
+          - pip install --upgrade pip
+          - pip install ansible # install ansible
+          - ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/hosts.yml ansible/copy_files.yml -v
+          - ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ansible/hosts.yml ansible/configure_server_permissions.yml -v
+definitions:
+  caches:
+    pip: ~/.cache/pip # define pip cache

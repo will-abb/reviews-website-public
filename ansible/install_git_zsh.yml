@@ -1,0 +1,47 @@
+- hosts: all
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+    - name: Install required packages
+      apt:
+        name:
+          - git
+          - zsh
+          - curl
+          - wget
+        state: latest
+    - name: Check Zsh version
+      command: zsh --version
+      register: zsh_version
+      changed_when: false
+    - name: Print Zsh version
+      debug:
+        msg: "Zsh version is {{ zsh_version.stdout }}"
+    - name: Download Oh My Zsh install script
+      get_url:
+        url: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+        dest: /tmp/install.sh
+        mode: "0777"
+    - name: Run Oh My Zsh install script
+      command: sh /tmp/install.sh
+      args:
+        creates: "$HOME/.oh-my-zsh"
+      become: no
+      environment:
+        ZSH: "$HOME/.oh-my-zsh"
+    - name: Backup old .zshrc
+      command: mv $HOME/.zshrc $HOME/.zshrc.pre-oh-my-zsh
+      args:
+        removes: "$HOME/.zshrc"
+    - name: Set Zsh as default shell for the current user
+      command: chsh -s $(which zsh)
+      become: no
+  handlers:
+    - name: remove install script
+      file:
+        path: /tmp/install.sh
+        state: absent

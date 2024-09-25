@@ -1,0 +1,37 @@
+- name: Configure web server permissions
+  hosts: all
+  become: yes
+  vars:
+    file_destination: /var/www/html
+    image_folder: /var/www/html/images
+    web_server_group: www-data
+  tasks:
+    - name: Change ownership of all files and directories to ubuntu and web server group
+      file:
+        path: "{{ file_destination }}"
+        owner: ubuntu
+        group: "{{ web_server_group }}"
+        recurse: yes
+    - name: Set permissions for directories and files (755)
+      file:
+        path: "{{ file_destination }}"
+        mode: "0644"
+        recurse: yes
+    - name: set execution permissions for the html folder (775)
+      file:
+        path: "{{ file_destination }}"
+        mode: "0755"
+    - name: set execution permissions for the img folder (775)
+      file:
+        path: "{{ image_folder }}"
+        mode: "0755"
+    ################################################
+    # - name: Set SGID bit on the parent directory #
+    #   file:                                      #
+    #     path: "{{ file_destination }}"           #
+    #     mode: 'g+s'                              #
+    ################################################
+    - name: Check changes
+      command: ls -l "{{ file_destination }}"
+      register: result
+    - debug: var=result.stdout_lines

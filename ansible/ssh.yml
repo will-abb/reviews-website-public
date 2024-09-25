@@ -1,0 +1,87 @@
+- name: Configure SSH on Ubuntu 22
+  hosts: all
+  become: yes
+  vars:
+    SSH_PORT: 62222
+    SSH_USER: ubuntu
+    SSH_GROUP: sshusers
+    MAX_AUTH_TRIES: 20
+    CLIENT_ALIVE_INTERVAL: 3600
+    CLIENT_ALIVE_COUNT_MAX: 10
+    ALLOW_AGENT_FORWARDING: "no"
+    USE_DNS: "no"
+  tasks:
+    - name: Create group '{{ SSH_GROUP }}'
+      group:
+        name: "{{ SSH_GROUP }}"
+        state: present
+    - name: Add user '{{ SSH_USER }}' to group '{{ SSH_GROUP }}'
+      user:
+        name: "{{ SSH_USER }}"
+        groups: "{{ SSH_GROUP }}"
+        append: yes
+    - name: Change SSH port
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?Port"
+        line: "Port {{ SSH_PORT }}"
+      notify: restart ssh
+    - name: Disallow root login
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?PermitRootLogin"
+        line: "PermitRootLogin no"
+      notify: restart ssh
+    - name: Disable password authentication
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?PasswordAuthentication"
+        line: "PasswordAuthentication no"
+      notify: restart ssh
+    - name: Allow only users in group '{{ SSH_GROUP }}' to SSH
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?AllowGroups"
+        line: "AllowGroups {{ SSH_GROUP }}"
+      notify: restart ssh
+    - name: Set AllowAgentForwarding
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?AllowAgentForwarding"
+        line: "AllowAgentForwarding {{ ALLOW_AGENT_FORWARDING }}"
+      notify: restart ssh
+    - name: Enable strict modes
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?StrictModes"
+        line: "StrictModes yes"
+      notify: restart ssh
+    - name: Set MaxAuthTries
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?MaxAuthTries"
+        line: "MaxAuthTries {{ MAX_AUTH_TRIES }}"
+      notify: restart ssh
+    - name: Set UseDNS
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?UseDNS"
+        line: "UseDNS {{ USE_DNS }}"
+      notify: restart ssh
+    - name: Set ClientAliveInterval
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?ClientAliveInterval"
+        line: "ClientAliveInterval {{ CLIENT_ALIVE_INTERVAL }}"
+      notify: restart ssh
+    - name: Set ClientAliveCountMax
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "^#?ClientAliveCountMax"
+        line: "ClientAliveCountMax {{ CLIENT_ALIVE_COUNT_MAX }}"
+      notify: restart ssh
+  handlers:
+    - name: restart ssh
+      service:
+        name: ssh
+        state: restarted

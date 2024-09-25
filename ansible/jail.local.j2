@@ -1,0 +1,14 @@
+[DEFAULT]
+ignoreip = 127.0.0.1/8 ::1 {{ fail2ban_my_ip }}
+bantime = {{ fail2ban_bantime }}
+findtime = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}
+
+[sshd]
+enabled = true
+
+[sudo]
+enabled  = true
+filter   = sudo
+logpath  = /var/log/auth.log
+maxretry = {{ fail2ban_maxretry }}

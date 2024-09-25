@@ -1,0 +1,205 @@
+/* General styles */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  background-image: url("images/cool-background.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 1em;
+  overflow: hidden;
+}
+
+/* Navigation Bar */
+.navbar {
+  background-color: #333;
+  padding: 1em;
+  overflow: hidden;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-around;
+  list-style-type: none;
+  padding: 0;
+  overflow-x: auto;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  padding: 1em;
+  text-align: center;
+}
+
+.nav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Disclaimer */
+.disclaimer {
+  text-align: center;
+  font-size: 0.9em;
+  background-color: #f2f2f2;
+  color: #333;
+  margin: 0 2%; /* Adjust as needed */
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Product styling */
+.product {
+  background-color: white;
+  border: 1em solid #ddd;
+  padding: 2%;
+  margin-bottom: 2%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.product img {
+  display: block;
+  margin: 0 auto;
+  max-width: 40%;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.product .title {
+  font-size: 2.2em;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  width: 100%;
+  height: 1vh;
+  background-size: cover;
+  text-align: center;
+  margin-top: 50px; /* adjust this value as needed */
+  margin-bottom: 50px; /* adjust this value as needed */
+  color: white;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  text-shadow: 0.1em 0.1em 0.2em rgba(0, 0, 0, 0.6);
+  margin: 0;
+  padding: 0;
+}
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: white;
+  padding: 2%;
+  text-align: center;
+}
+
+footer ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+footer ul li {
+  display: inline;
+  margin: 0 1em;
+}
+
+footer ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+footer ul li a:hover {
+  color: #ddd;
+}
+
+/* Contact Form */
+.contact-form {
+  width: 100%;
+  max-width: 600px;
+  margin: 2% auto;
+  padding: 2%;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 1em;
+  margin-bottom: 1em;
+  border: 1px solid #ddd;
+}
+
+.contact-form textarea {
+  height: 200px;
+  resize: none;
+}
+
+.contact-form button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 1em 2em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+  background-color: #444;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+
+  .product img {
+    max-width: 60%;
+  }
+
+  .hero {
+    height: 10vh;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .product img {
+    max-width: 80%;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+.description {
+  font-size: 1.3em; /* Adjust as needed */
+}
+
+.review-summary p {
+  font-size: 1.3em; /* Adjust as needed */
+}
+
+h3 {
+  font-size: 2em; /* Adjust as needed */
+}

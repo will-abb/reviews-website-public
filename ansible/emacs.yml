@@ -1,0 +1,29 @@
+- hosts: all
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: Update and upgrade apt packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+    - name: Install snapd
+      apt:
+        name: snapd
+        state: latest
+    - name: Install Emacs via Snap
+      command: snap install emacs --beta --classic
+    - name: Clone Doom Emacs
+      git:
+        repo: "https://github.com/hlissner/doom-emacs.git"
+        dest: "~/.config/emacs"
+        depth: 1
+        update: no
+    - name: Install Doom Emacs
+      command: "~/.config/emacs/bin/doom install"
+      become: no
+    - name: Add Doom Emacs to PATH
+      lineinfile:
+        path: "~/.bashrc"
+        line: "export PATH=$PATH:~/.config/emacs/bin"
+        state: present
+      become: no

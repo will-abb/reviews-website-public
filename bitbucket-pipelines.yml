@@ -1,0 +1,13 @@
+image:
+  name: williseed2000/private_repo:pre-commit
+  username: $DOCKER_HUB_USERNAME
+  password: $DOCKER_HUB_PASSWORD
+  email: $DOCKER_HUB_EMAIL
+pipelines:
+  default:
+    - step:
+        name: Deploy to AWS
+        script:
+          - source /venv/bin/activate && pre-commit run -a
+          - source /venv/bin/activate && aws sts get-caller-identity
+          - source /venv/bin/activate && aws s3 sync site_code/final_code/ s3://trendingtechdevices.com
